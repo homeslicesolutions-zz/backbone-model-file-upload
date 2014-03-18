@@ -4,7 +4,7 @@ A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload.
 
 This plugin upgrades the current `save` method to be able to upload files.
 
-NOTE: This file upload plugin can only work if the model is flattened.  Deep nested objects within in the model will not output correctly.  (Explained later)
+NOTE: This plugin will require deep parsing in the back-end since it won't be using a JSON object. In other words, your normal JSON serialization won't work here.  It will convert the model to a key/value pattern.  Model will be flattened on request.
 
 ## How to use
 Grab the File object from the DOM, `set` it to an attribute, then call `save`.  That's it!  (`save` with the attribute parameter works as well)
@@ -14,7 +14,6 @@ model.save([file attribute], [file object], [options]);
 ```
 model.set('file', [file object]);
 model.save({}, [options])
-
 ```
 ### save & set
 #### model.save( [file attribute], [file object], [options] )
@@ -44,7 +43,41 @@ email.on('progress', console.log);
 The attribute `file` is the default. As you can see from the example above, you can set it to whatever you want.
 
 ## How it works
-This plugin will use the FormData class to wrap all the attributes in.  That basically means it's making what we used to know as the old-fashioned "form" into a data object.  The old-fashion "form" only took key-value pairs, so the same applies here.  The attributes gets converted into a FormData object then is sent through as a "multipart/data-form".  So it is recommended to use a flattened model as Jeremy Ashkenas himself recommends.
+This plugin will use the FormData class to wrap all the attributes in.  That basically means it's making what we used to know as the old-fashioned "form" into a data object.  The old-fashion "form" only took key-value pairs, so the same applies here.  The attributes gets converted into a FormData object then is sent through as a "multipart/data-form".  So it is recommended to use a flattened model for easier parsing as Jeremy Ashkenas himself usually recommends for all scenarios.
+
+## What happens to a model with nested objects/arrays?
+The model will be flattened and the nested value will be separated with it's own unique composite "breadcrumb" key.  The key parsing will reflect the array or object with the index or property respectively.
+```
+var obj = {
+  'family': 'The Smiths',
+  'grandpa': {
+    'name': 'Ole Joe Smith',
+    'children': [
+      {
+        'name': 'Mary Lee',
+        'spouse': 'John Lee',
+        'children': [
+          {
+            'name': 'Tiny Lee'
+          }
+        ]
+      },
+      {
+        'name': 'Susan Smith'
+      }
+    ]
+  }
+}
+``` 
+Will return:
+```
+obj['family']                             => 'The Smiths';
+obj['grandpa.name']                       => 'Ole Joe Smith';
+obj['grandpa.children.0.name']            => 'Mary Lee'; 
+obj['grandpa.children.0.spouse']          => 'John Lee';
+obj['grandpa.children.0.children.0.name'] => 'Tiny Lee';
+obj['grandpa.children.1.name']            => 'Susan Smith'; 
+```
 
 ## Non-destructive plugin
 The plugin is non-destructive to the existing behaviors.  When a file object is detected, then the method is tweaked and converted to a FormData object.

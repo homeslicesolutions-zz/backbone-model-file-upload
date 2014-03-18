@@ -6,12 +6,17 @@ $dataUrl = 'data:' . $fileType . ';base64,' . base64_encode($fileContent);
  
 
 $json = json_encode(array(
-  'fileName' => $fileName,
-  'fileType' => $fileType,
-  'dataUrl' => $dataUrl,
+  'fileAttachment' => array(
+    'name' => $fileName,
+    'type' => $fileType,
+    'data' => $dataUrl
+  ),
   'from' => $_REQUEST['from'],
   'subject' => $_REQUEST['subject'],
-  'body' => $_REQUEST['body']
+  'body' => $_REQUEST['body'],
+  'nestedObject' => array(
+    'nest' => $_REQUEST["nestedObject.nest"]
+  )
 ));
  
 echo $json;

@@ -40,12 +40,20 @@
         this.attributes = _.extend({}, attributes, attrs);
       }
 
-      // Check if file exist and if so, convert to FormData
-      if ( this.attributes[ this.fileAttribute ] && this.attributes[ this.fileAttribute ] instanceof File ) {
+      // Check for "allowFormData" flag and if file exist and if so, convert to FormData
+      if ( options.allowFormData !== false
+            && this.attributes[ this.fileAttribute ] 
+            && this.attributes[ this.fileAttribute ] instanceof File ) {
         
+        // Flatten Attributes reapplying File Object
+        var formAttrs = _.clone( this.attributes ),
+            fileAttr = this.attributes[ this.fileAttribute ];
+        formAttrs = this._flatten( formAttrs );
+        formAttrs[ this.fileAttribute ] = fileAttr;
+
         // Converting Attributes to Form Data
         var formData = new FormData();
-        _.each( attributes, function( value, key ){
+        _.each( formAttrs, function( value, key ){
           formData.append( key, value );
         });
 
@@ -75,6 +83,26 @@
       
     },
 
+    // _ FlattenObject gist by "penguinboy".  Thank You!
+    // https://gist.github.com/penguinboy/762197
+    _flatten: function( obj ) {
+      var output = {};
+      for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] == 'object') {
+          var flatObject = this._flatten(obj[i]);
+          for (var x in flatObject) {
+            if (!flatObject.hasOwnProperty(x)) continue;
+            output[i + '.' + x] = flatObject[x];
+          }
+        } else {
+          output[i] = obj[i];
+        }
+      }
+      return output;
+
+    },
+    
     // _ Get the Progress of the uploading file
     _progressHandler: function( event ) {
       if (event.lengthComputable) {
