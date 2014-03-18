@@ -4,16 +4,16 @@ A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE
 
 This plugin upgrades the current `save` method to be able to upload files using the HTML5's File API and FormData class.
 
-NOTE: This plugin will require deep parsing in the back-end since it won't be using a JSON object. In other words, your normal JSON serialization won't work here.  It will convert the model to a key/value pattern.  Model will be flattened on request.
+NOTE: This plugin will require deep parsing in the back-end since it won't be using a JSON object. In other words, your normal JSON serialization won't work here.  It will convert the model to a key/value form data.  This means the model data will be flattened on request.
 
 ## How to use
 Grab the File object from the DOM, `set` it to an attribute, then call `save`.  That's it!  (`save` with the attribute parameter works as well)
 ```
-model.save([file attribute], [file object], [options]);
-```
-```
 model.set('file', [file object]);
 model.save({}, [options])
+```
+```
+model.save([file attribute], [file object], [options]);
 ```
 ### set & save
 #### model.set( [file attribute], [file object], [options] )
