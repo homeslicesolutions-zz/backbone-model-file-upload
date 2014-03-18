@@ -40,10 +40,11 @@
         this.attributes = _.extend({}, attributes, attrs);
       }
 
-      // Check for "allowFormData" flag and if file exist and if so, convert to FormData
-      if ( options.allowFormData !== false
-            && this.attributes[ this.fileAttribute ] 
-            && this.attributes[ this.fileAttribute ] instanceof File ) {
+      // Check for "formData" flag and check for if file exist.
+      if ( options.formData === true 
+           || options.formData !== false 
+              && this.attributes[ this.fileAttribute ] 
+              && this.attributes[ this.fileAttribute ] instanceof File ) {
         
         // Flatten Attributes reapplying File Object
         var formAttrs = _.clone( this.attributes ),
