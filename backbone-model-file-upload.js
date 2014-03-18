@@ -11,7 +11,7 @@
   // Extending out
   _.extend(Backbone.Model.prototype, {  
 
-    // @ Default file attribute - can be overwritten
+    // ! Default file attribute - can be overwritten
     fileAttribute: 'file',
 
     // @ Save - overwritten
