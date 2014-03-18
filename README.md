@@ -1,8 +1,8 @@
 Backbone.Model File Upload
 ==========================
-A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload.
+A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE >= 9, FF, Chrome.)
 
-This plugin upgrades the current `save` method to be able to upload files.
+This plugin upgrades the current `save` method to be able to upload files using the HTML5's File API and FormData class.
 
 NOTE: This plugin will require deep parsing in the back-end since it won't be using a JSON object. In other words, your normal JSON serialization won't work here.  It will convert the model to a key/value pattern.  Model will be flattened on request.
 
@@ -18,7 +18,7 @@ model.save({}, [options])
 ### save & set
 #### model.save( [file attribute], [file object], [options] )
 #### model.set( [file attribute], [file object], [options] )
-In terms of how to use these methods, they have not changed. The only difference is that it has the capability to take a File object grabbed from the DOM (i.e. `<input type="file" />`).  As the file is being uploaded, a trigger `progress` is being sent as the browser sends chunks of data.  The `progress` trigger sends a progress status in percents.
+In terms of how to use these methods, they have not changed. The only difference is that it has the capability to take a File object grabbed from the DOM (i.e. `<input type="file" />`).  As the file is being uploaded, a trigger `progress` fires as the browser sends chunks of data.  The `progress` trigger sends a progress status in percents.
 
 ```js
 var fileObject = $(':input[type="file"]')[0].files[0];
