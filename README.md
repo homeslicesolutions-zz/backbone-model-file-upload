@@ -4,8 +4,6 @@ A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE
 
 This plugin upgrades the current `save` method to be able to upload files using the HTML5's File API and FormData class.
 
-NOTE: This plugin will require deep parsing in the back-end since it won't be using a JSON object. In other words, your normal JSON serialization won't work here.  It will convert the model to a key/value form data.  This means the model data will be flattened on request.
-
 ## How to use
 Grab the File object from the DOM, `set` it to an attribute, then call `save`.  That's it!  (`save` with the attribute parameter works as well)
 ```
@@ -49,6 +47,14 @@ The attribute `file` is the default. As you can see from the example above, you 
 
 ## How it works
 This plugin will use the FormData class to wrap all the attributes in.  That basically means it's making what we used to know as the old-fashioned "form" into a data object.  The old-fashion "form" only took key-value pairs, so the same applies here.  The attributes gets converted into a FormData object then is sent through as a "multipart/data-form".  So it is recommended to use a flattened model for easier parsing as Jeremy Ashkenas himself usually recommends for all scenarios.
+
+To see how to support file uploads for .NET, see this good link:
+http://www.asp.net/web-api/overview/working-with-http/sending-html-form-data,-part-2
+
+For java, there's a great example here using the Spring framework:
+http://viralpatel.net/blogs/spring-mvc-multiple-file-upload-example/
+
+In the "test" folder (not finished yet), I included a PHP uploader just for testing purposes, but feel free to extend that.  You have to figure out the file upload limitations, however.
 
 ## What happens to a model with nested objects/arrays?
 The model will be flattened and the nested value will be separated with it's own unique composite "breadcrumb" key.  The key parsing will reflect the array or object with the index or property respectively.
