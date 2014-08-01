@@ -1,3 +1,4 @@
+
 //     Backbone.Model File Upload v0.1
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
@@ -43,12 +44,12 @@
       // Check for "formData" flag and check for if file exist.
       if ( options.formData === true 
            || options.formData !== false 
-              && this.attributes[ this.fileAttribute ] 
-              && this.attributes[ this.fileAttribute ] instanceof File ) {
+              && attr[ this.fileAttribute ] 
+              && attr[ this.fileAttribute ] instanceof File ) {
         
         // Flatten Attributes reapplying File Object
-        var formAttrs = _.clone( this.attributes ),
-            fileAttr = this.attributes[ this.fileAttribute ];
+        var formAttrs = _.clone( attr ),
+            fileAttr = attr[ this.fileAttribute ];
         formAttrs = this._flatten( formAttrs );
         formAttrs[ this.fileAttribute ] = fileAttr;
 
