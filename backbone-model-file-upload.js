@@ -3,13 +3,21 @@
 //     For all details and documentation:
 //     https://github.com/homeslicesolutions/backbone-model-file-upload
 
-!function(_, Backbone){
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['underscore', 'backbone'], factory);
+    } else {
+        // Browser globals
+        factory(_, Backbone);
+    }
+}(this, function(_, Backbone){
 
   // Clone the original Backbone.Model.prototype
   var backboneModelClone = _.clone( Backbone.Model.prototype );
 
   // Extending out
-  _.extend(Backbone.Model.prototype, {  
+  _.extend(Backbone.Model.prototype, {
 
     // ! Default file attribute - can be overwritten
     fileAttribute: 'file',
@@ -20,7 +28,7 @@
       // Variables
       var attrs, attributes = this.attributes;
 
-      // Signature parsing - taken directly from original Backbone.Model.save 
+      // Signature parsing - taken directly from original Backbone.Model.save
       // and it states: 'Handle both "key", value and {key: value} -style arguments.'
       if (key == null || typeof key === 'object') {
         attrs = key;
@@ -41,11 +49,11 @@
       }
 
       // Check for "formData" flag and check for if file exist.
-      if ( options.formData === true 
-           || options.formData !== false 
-              && this.attributes[ this.fileAttribute ] 
+      if ( options.formData === true
+           || options.formData !== false
+              && this.attributes[ this.fileAttribute ]
               && this.attributes[ this.fileAttribute ] instanceof File ) {
-        
+
         // Flatten Attributes reapplying File Object
         var formAttrs = _.clone( this.attributes ),
             fileAttr = this.attributes[ this.fileAttribute ];
@@ -73,7 +81,7 @@
             that._progressHandler.apply(that, arguments);
           }, false);
           return xhr;
-        }    
+        }
       }
 
       // Resume back to original state
@@ -81,7 +89,7 @@
 
       // Continue to call the existing "save" method
       return backboneModelClone.save.call(this, attrs, options);
-      
+
     },
 
     // _ FlattenObject gist by "penguinboy".  Thank You!
@@ -103,7 +111,7 @@
       return output;
 
     },
-    
+
     // _ Get the Progress of the uploading file
     _progressHandler: function( event ) {
       if (event.lengthComputable) {
@@ -114,4 +122,4 @@
 
   });
 
-}(_, Backbone);
+}));
