@@ -1,7 +1,10 @@
-//     Backbone.Model File Upload v0.1
+//     Backbone.Model File Upload v0.3
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
 //     https://github.com/homeslicesolutions/backbone-model-file-upload
+//     Contributors:
+//       lutherism - Alex Jansen - alex.openrobot.net
+//       bildja - Dima Bildin - github.com/bildja
 
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
@@ -28,11 +31,16 @@
       // Variables
       var attrs, attributes = this.attributes;
 
-      // Signature parsing - taken directly from original Backbone.Model.save
-      // and it states: 'Handle both "key", value and {key: value} -style arguments.'
-      if (key == null || typeof key === 'object') {
-        attrs = key;
-        options = val;
+      // Signature parsing - similar to original Backbone.Model.save
+      // Handle (key, value, options), ({key: value}, options), and (options) -style arguments.
+      if (typeof key === 'object') {
+        if (typeof val === void 0) {
+          attrs = attributes;
+          options = key;
+        } else {
+          attrs = key;
+          options = val;
+        }
       } else {
         (attrs = {})[key] = val;
       }
@@ -49,14 +57,14 @@
       }
 
       // Check for "formData" flag and check for if file exist.
-      if ( options.formData === true
-           || options.formData !== false
-              && this.attributes[ this.fileAttribute ]
-              && this.attributes[ this.fileAttribute ] instanceof File ) {
-
+      if ( options.formData === true 
+           || options.formData !== false 
+              && attrs[ this.fileAttribute ] 
+              && attrs[ this.fileAttribute ] instanceof File ) {
+        
         // Flatten Attributes reapplying File Object
-        var formAttrs = _.clone( this.attributes ),
-            fileAttr = this.attributes[ this.fileAttribute ];
+        var formAttrs = _.clone( attrs ),
+            fileAttr = attrs[ this.fileAttribute ];
         formAttrs = this._flatten( formAttrs );
         formAttrs[ this.fileAttribute ] = fileAttr;
 
