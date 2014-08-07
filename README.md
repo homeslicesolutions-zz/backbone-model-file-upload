@@ -132,3 +132,15 @@ requirejs.config({
 <script src="assets/js/backbone.js" />
 <script src="assets/js/backbone-model-file-upload.js" />
 ```
+
+### Revisions
+
+## Version v0.1
+- First release
+
+## Version v0.2
+- Reformatted to standard AMD boilerplate pattern
+
+## Version v0.3
+- Fixed the use of "attrs" instead of using "this.attributes" at condition check and model parsing/flattening
+- Added the option to save just option, i.e:  .save({ silent: true });
