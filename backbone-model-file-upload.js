@@ -20,7 +20,7 @@
   var backboneModelClone = _.clone( Backbone.Model.prototype );
 
   // Extending out
-  _.extend(Backbone.Model.prototype, {
+  var FileModel = Backbone.Model.extend({
 
     // ! Default file attribute - can be overwritten
     fileAttribute: 'file',
@@ -130,4 +130,8 @@
 
   });
 
+  //Exports
+  Backbone.FileModel = FileModel;
+  
+  return FileModel;
 }));
