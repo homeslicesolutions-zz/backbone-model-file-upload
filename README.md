@@ -144,3 +144,8 @@ requirejs.config({
 ## Version v0.3
 - Fixed the use of "attrs" instead of using "this.attributes" at condition check and model parsing/flattening
 - Added the option to save just option, i.e:  .save({ silent: true });
+
+## Version 0.4
+ - Fixed all the wonkiness from 0.3 with the attributes and save.  Reverted a lot of code and refactored
+ - Added "blob" support as a FileObj entity
+ - Added some Jasmine tests
