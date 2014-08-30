@@ -156,6 +156,58 @@
 
     });
 
+    it('should still silent true with file', function(done){
+
+      var changed = false;
+
+      // Listen
+      fileModel.on('sync', function(model){
+        
+        // Assert
+        expect(model.get('fileAttachment').data).toBe('data:text/html;base64,PHN0cm9uZz5IZWxsbyBXb3JsZDwvc3Ryb25nPg==');
+
+        setTimeout(function(){
+          expect(changed).not.toBeTruthy();
+          done();
+        },500);
+
+      });
+
+      fileModel.on('change', function(){
+        changed = true;
+      })
+
+      // Act
+      fileModel.save({fileAttachment: simulatedFileObj}, {silent: true});
+
+    });
+
+    it('should still silent true without file', function(done){
+
+      var changed = false;
+
+      // Listen
+      fileModel.on('sync', function(model){
+        
+        // Assert
+        expect(model.get('from')).toBe('yes');
+
+        setTimeout(function(){
+          expect(changed).not.toBeTruthy();
+          done();
+        },500);
+
+      });
+
+      fileModel.on('change', function(){
+        changed = true;
+      })
+
+      // Act
+      fileModel.save({from: "yes"}, {silent: true});
+
+    });
+
   });
 
 }();
