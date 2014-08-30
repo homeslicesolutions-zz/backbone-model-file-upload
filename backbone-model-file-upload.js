@@ -1,4 +1,4 @@
-//     Backbone.Model File Upload v0.3
+//     Backbone.Model File Upload v0.4
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
 //     https://github.com/homeslicesolutions/backbone-model-file-upload
@@ -20,7 +20,7 @@
   var backboneModelClone = _.clone( Backbone.Model.prototype );
 
   // Extending out
-  _.extend(Backbone.Model.prototype, {
+  _.extend(Backbone.Model.prototype, {  
 
     // ! Default file attribute - can be overwritten
     fileAttribute: 'file',
@@ -31,16 +31,11 @@
       // Variables
       var attrs, attributes = this.attributes;
 
-      // Signature parsing - similar to original Backbone.Model.save
-      // Handle (key, value, options), ({key: value}, options), and (options) -style arguments.
-      if (typeof key === 'object') {
-        if (typeof val === void 0) {
-          attrs = attributes;
-          options = key;
-        } else {
-          attrs = key;
-          options = val;
-        }
+      // Signature parsing - taken directly from original Backbone.Model.save 
+      // and it states: 'Handle both "key", value and {key: value} -style arguments.'
+      if (key == null || typeof key === 'object') {
+        attrs = key;
+        options = val;
       } else {
         (attrs = {})[key] = val;
       }
@@ -52,19 +47,24 @@
       } else {
         if (!this._validate(attrs, options)) return false;
       }
+
+      // Merge data temporarily for formdata
+      var mergedAttrs = _.extend({}, attributes, attrs);
+
       if (attrs && options.wait) {
-        this.attributes = _.extend({}, attributes, attrs);
+        this.attributes = mergedAttrs;
       }
 
       // Check for "formData" flag and check for if file exist.
       if ( options.formData === true 
            || options.formData !== false 
-              && attrs[ this.fileAttribute ] 
-              && attrs[ this.fileAttribute ] instanceof File ) {
+              && mergedAttrs[ this.fileAttribute ] 
+              && mergedAttrs[ this.fileAttribute ] instanceof File
+              || mergedAttrs[ this.fileAttribute ] instanceof Blob ) {
         
         // Flatten Attributes reapplying File Object
-        var formAttrs = _.clone( attrs ),
-            fileAttr = attrs[ this.fileAttribute ];
+        var formAttrs = _.clone( mergedAttrs ),
+            fileAttr = mergedAttrs[ this.fileAttribute ];
         formAttrs = this._flatten( formAttrs );
         formAttrs[ this.fileAttribute ] = fileAttr;
 
@@ -75,7 +75,6 @@
         });
 
         // Set options for AJAX call
-        options = options || {};
         options.data = formData;
         options.processData = false;
         options.contentType = false;
@@ -85,11 +84,10 @@
         options.xhr = function() {
           var xhr = $.ajaxSettings.xhr();
           xhr.upload.addEventListener('progress', function(){
-
             that._progressHandler.apply(that, arguments);
           }, false);
           return xhr;
-        }
+        }    
       }
 
       // Resume back to original state
@@ -97,7 +95,7 @@
 
       // Continue to call the existing "save" method
       return backboneModelClone.save.call(this, attrs, options);
-
+      
     },
 
     // _ FlattenObject gist by "penguinboy".  Thank You!
@@ -119,7 +117,7 @@
       return output;
 
     },
-
+    
     // _ Get the Progress of the uploading file
     _progressHandler: function( event ) {
       if (event.lengthComputable) {
