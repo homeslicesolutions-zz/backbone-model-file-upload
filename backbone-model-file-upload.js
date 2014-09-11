@@ -60,6 +60,7 @@
            || options.formData !== false 
               && mergedAttrs[ this.fileAttribute ] 
               && mergedAttrs[ this.fileAttribute ] instanceof File
+              || mergedAttrs[ this.fileAttribute ] instanceof FileList
               || mergedAttrs[ this.fileAttribute ] instanceof Blob ) {
         
         // Flatten Attributes reapplying File Object
@@ -71,6 +72,12 @@
         // Converting Attributes to Form Data
         var formData = new FormData();
         _.each( formAttrs, function( value, key ){
+          if (value instanceof FileList) {
+            _.each(value, function(file) {
+              formData.append( key, file );
+            });
+            return;
+          }
           formData.append( key, value );
         });
 
