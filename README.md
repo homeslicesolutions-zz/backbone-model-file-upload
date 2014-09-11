@@ -17,7 +17,9 @@ model.save([file attribute], [file object], [options]);
 #### model.set( [file attribute], [file object], [options] )
 #### model.save( [file attribute], [file object], [options] )
 
-In terms of how to use these methods, they have not changed. The only difference is that it has the capability to take a File object grabbed from the DOM (i.e. `<input type="file" />`).  
+In terms of how to use these methods, they have not changed. The only difference is that it has the capability to take a File object grabbed from the DOM (i.e. `<input type="file" />`). 
+
+File, Blob, and FileList are all valid in the model.  Once set it will be uploaded when ready. 
 
 As the file is being uploaded, a trigger `progress` fires as the browser sends chunks of data.  The `progress` trigger sends a progress status in percents.  
 
@@ -149,3 +151,6 @@ requirejs.config({
  - Fixed all the wonkiness from 0.3 with the attributes and save.  Reverted a lot of code and refactored
  - Added "blob" support as a FileObj entity
  - Added some Jasmine tests
+
+## Version 0.5
+ - Added FileList support

@@ -1,19 +1,20 @@
-//     Backbone.Model File Upload v0.4
+//     Backbone.Model File Upload v0.5
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
 //     https://github.com/homeslicesolutions/backbone-model-file-upload
 //     Contributors:
 //       lutherism - Alex Jansen - alex.openrobot.net
 //       bildja - Dima Bildin - github.com/bildja
+//       Minjung - Alejandro - github.com/Minjung
 
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['underscore', 'backbone'], factory);
-    } else {
-        // Browser globals
-        factory(_, Backbone);
-    }
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+      define(['underscore', 'backbone'], factory);
+  } else {
+    // Browser globals
+    factory(_, Backbone);
+  }
 }(this, function(_, Backbone){
 
   // Clone the original Backbone.Model.prototype
@@ -87,12 +88,9 @@
         options.contentType = false;
 
         // Apply custom XHR for processing status & listen to "progress"
-        var that = this;
         options.xhr = function() {
           var xhr = $.ajaxSettings.xhr();
-          xhr.upload.addEventListener('progress', function(){
-            that._progressHandler.apply(that, arguments);
-          }, false);
+          xhr.upload.addEventListener('progress', this._progressHandler.bind(this), false);
           return xhr;
         }    
       }
