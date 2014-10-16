@@ -154,3 +154,6 @@ requirejs.config({
 
 ## Version 0.5
  - Added FileList support
+
+## Version 0.5.1
+ - Fix refactoring error.  
