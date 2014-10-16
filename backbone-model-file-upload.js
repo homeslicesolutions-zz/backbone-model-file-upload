@@ -1,4 +1,4 @@
-//     Backbone.Model File Upload v0.5
+//     Backbone.Model File Upload v0.5.1
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
 //     https://github.com/homeslicesolutions/backbone-model-file-upload
@@ -88,9 +88,10 @@
         options.contentType = false;
 
         // Apply custom XHR for processing status & listen to "progress"
+        var that = this;
         options.xhr = function() {
           var xhr = $.ajaxSettings.xhr();
-          xhr.upload.addEventListener('progress', this._progressHandler.bind(this), false);
+          xhr.upload.addEventListener('progress', that._progressHandler.bind(that), false);
           return xhr;
         }    
       }
