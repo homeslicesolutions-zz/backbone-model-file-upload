@@ -1,6 +1,6 @@
 Backbone.Model File Upload
 ==========================
-A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE >= 9, FF, Chrome.)
+A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE >= 10, FF, Chrome.)
 
 This plugin upgrades the current `save` method to be able to upload files using the HTML5's File API and FormData class.
 
