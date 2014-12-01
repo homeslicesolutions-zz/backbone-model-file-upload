@@ -10,12 +10,12 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-      define(['underscore', 'backbone'], factory);
+      define(['underscore', 'jquery', 'backbone'], factory);
   } else {
     // Browser globals
-    factory(_, Backbone);
+    factory(_, $, Backbone);
   }
-}(this, function(_, Backbone){
+}(this, function(_, $, Backbone){
 
   // Clone the original Backbone.Model.prototype
   var backboneModelClone = _.clone( Backbone.Model.prototype );
