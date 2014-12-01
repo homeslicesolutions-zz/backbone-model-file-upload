@@ -157,3 +157,7 @@ requirejs.config({
 
 ## Version 0.5.1
  - Fix refactoring error.  
+
+## Version 0.5.2
+ - Add jQuery to the UMD dependency model
+
