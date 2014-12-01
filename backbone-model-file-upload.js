@@ -1,4 +1,4 @@
-//     Backbone.Model File Upload v0.5.1
+//     Backbone.Model File Upload v0.5.2
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
 //     https://github.com/homeslicesolutions/backbone-model-file-upload
