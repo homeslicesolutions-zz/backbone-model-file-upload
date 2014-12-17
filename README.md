@@ -2,6 +2,8 @@ Backbone.Model File Upload
 ==========================
 A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE >= 10, FF, Chrome.)
 
+![alt tag](https://travis-ci.org/homeslicesolutions/backbone-model-file-upload.svg?branch=master)
+
 This plugin upgrades the current `save` method to be able to upload files using the HTML5's File API and FormData class.
 
 ## How to use
@@ -137,27 +139,41 @@ requirejs.config({
 
 ### Revisions
 
-## Version v0.1
+c Version v0.1
 - First release
 
-## Version v0.2
+#### Version v0.2
 - Reformatted to standard AMD boilerplate pattern
 
-## Version v0.3
+#### Version v0.3
 - Fixed the use of "attrs" instead of using "this.attributes" at condition check and model parsing/flattening
 - Added the option to save just option, i.e:  .save({ silent: true });
 
-## Version 0.4
+#### Version 0.4
  - Fixed all the wonkiness from 0.3 with the attributes and save.  Reverted a lot of code and refactored
  - Added "blob" support as a FileObj entity
  - Added some Jasmine tests
 
-## Version 0.5
+#### Version 0.5
  - Added FileList support
 
-## Version 0.5.1
+#### Version 0.5.1
  - Fix refactoring error.  
 
-## Version 0.5.2
+#### Version 0.5.2
  - Add jQuery to the UMD dependency model
+ - 
+ 
+### Dev/Installation
+If you want to work on this plugin, test it, etc., it just needs an install of `node` and `grunt`. 
+```
+npm i -d
+```
+To test
+```
+npm test
+```
+
+### Future plans
+As I'm looking at this plugin and all the plugins, I'm not really extending out the Backbone class like how it should. Also people have been asking me to write a mixin version instead.  Also there should be a CommonJS version as well. If any of you guys want to help please do. That would be great!
 
