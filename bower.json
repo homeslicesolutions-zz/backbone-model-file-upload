@@ -1,0 +1,8 @@
+{
+  "name": "backbone-model-file-upload tests",
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "backbone": "~1.1.2",
+    "Blob": "*"
+  }
+}

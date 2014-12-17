@@ -1,0 +1,14 @@
+# Development generated files
+.idea
+atlassian-ide-plugin.xml
+
+# Folders
+node_modules
+bower_components
+dist
+.grunt
+
+# Debug files
+_SpecRunner.html
+npm-debug.log
+
