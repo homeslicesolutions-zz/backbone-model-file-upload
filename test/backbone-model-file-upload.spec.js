@@ -14,6 +14,8 @@
       fileAttribute: 'fileAttachment'
     });
 
+
+
     var fileModel;
     var simulatedFileObj;
 
@@ -136,7 +138,7 @@
 
       // Act
       fileModel.set({from: 'somethingelse@email.com'});
-      fileModel.save(null);
+      fileModel.save();
 
     });
 

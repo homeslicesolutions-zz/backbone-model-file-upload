@@ -13,6 +13,7 @@
     "grunt-contrib-jasmine": "^0.6.5",
     "grunt-run": "^0.3.0",
     "grunt-run-node": "^0.1.0",
+    "grunt-template-jasmine-requirejs": "^0.2.0",
     "lodash": "~2.4.1"
   },
   "scripts": {

@@ -1,4 +1,4 @@
-//     Backbone.Model File Upload v0.5.2
+//     Backbone.Model File Upload v0.5.3
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
 //     https://github.com/homeslicesolutions/backbone-model-file-upload
@@ -7,21 +7,32 @@
 //       bildja - Dima Bildin - github.com/bildja
 //       Minjung - Alejandro - github.com/Minjung
 
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-      define(['underscore', 'jquery', 'backbone'], factory);
-  } else {
-    // Browser globals
-    factory(_, $, Backbone);
-  }
-}(this, function(_, $, Backbone){
+(function(root, factory) {
 
-  // Clone the original Backbone.Model.prototype
-  var backboneModelClone = _.clone( Backbone.Model.prototype );
+  // AMD
+  if (typeof define === 'function' && define.amd) {
+    define(['underscore', 'jquery', 'backbone'], function(_, $, Backbone){
+      factory(root, Backbone, _, $);
+    });
+
+  // NodeJS/CommonJS
+  } else if (typeof exports !== 'undefined') {
+    var _ = require('underscore'), $ = require('jquery'), Backbone = require('backbone');
+    factory(root, _, $, Backbone);
+
+  // Browser global
+  } else {
+    factory(root, root.Backbone, root._, root.$);
+  }
+
+}(this, function(root, Backbone, _, $) {
+  'use strict';
+
+  // Clone the original Backbone.Model.prototype as superClass
+  var _superClass = _.clone( Backbone.Model.prototype );
 
   // Extending out
-  _.extend(Backbone.Model.prototype, {  
+  var BackboneModelFileUpload = Backbone.Model.extend({
 
     // ! Default file attribute - can be overwritten
     fileAttribute: 'file',
@@ -32,7 +43,7 @@
       // Variables
       var attrs, attributes = this.attributes;
 
-      // Signature parsing - taken directly from original Backbone.Model.save 
+      // Signature parsing - taken directly from original Backbone.Model.save
       // and it states: 'Handle both "key", value and {key: value} -style arguments.'
       if (key == null || typeof key === 'object') {
         attrs = key;
@@ -57,16 +68,16 @@
       }
 
       // Check for "formData" flag and check for if file exist.
-      if ( options.formData === true 
-           || options.formData !== false 
-              && mergedAttrs[ this.fileAttribute ] 
-              && mergedAttrs[ this.fileAttribute ] instanceof File
-              || mergedAttrs[ this.fileAttribute ] instanceof FileList
-              || mergedAttrs[ this.fileAttribute ] instanceof Blob ) {
-        
+      if ( options.formData === true
+        || options.formData !== false
+        && mergedAttrs[ this.fileAttribute ]
+        && mergedAttrs[ this.fileAttribute ] instanceof File
+        || mergedAttrs[ this.fileAttribute ] instanceof FileList
+        || mergedAttrs[ this.fileAttribute ] instanceof Blob ) {
+
         // Flatten Attributes reapplying File Object
         var formAttrs = _.clone( mergedAttrs ),
-            fileAttr = mergedAttrs[ this.fileAttribute ];
+          fileAttr = mergedAttrs[ this.fileAttribute ];
         formAttrs = this._flatten( formAttrs );
         formAttrs[ this.fileAttribute ] = fileAttr;
 
@@ -93,15 +104,15 @@
           var xhr = $.ajaxSettings.xhr();
           xhr.upload.addEventListener('progress', that._progressHandler.bind(that), false);
           return xhr;
-        }    
+        }
       }
 
       // Resume back to original state
       if (attrs && options.wait) this.attributes = attributes;
 
       // Continue to call the existing "save" method
-      return backboneModelClone.save.call(this, attrs, options);
-      
+      return _superClass.save.call(this, attrs, options);
+
     },
 
     // _ FlattenObject gist by "penguinboy".  Thank You!
@@ -123,7 +134,7 @@
       return output;
 
     },
-    
+
     // _ Get the Progress of the uploading file
     _progressHandler: function( event ) {
       if (event.lengthComputable) {
@@ -131,7 +142,9 @@
         this.trigger( 'progress', percentComplete );
       }
     }
-
   });
+
+  // Export out to override Backbone Model
+  Backbone.Model = BackboneModelFileUpload;
 
 }));

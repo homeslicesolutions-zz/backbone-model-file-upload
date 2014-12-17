@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 
     run_node: {
       start: {
-        files: { src: [ 'tests/mock-file-server.js'] }
+        files: { src: [ 'test/mock-file-server.js'] }
       }
     },
 
@@ -35,41 +35,50 @@ module.exports = function(grunt) {
     },
 
     jasmine: {
-      host: 'http://localhost:8888/',
-      options: {
-        specs: ['tests/*spec.js'],
-        //keepRunner: true,
-        vendor: [
-          "bower_components/Blob/Blob.js",
-          "bower_components/jquery/dist/jquery.min.js",
-          "bower_components/underscore/underscore-min.js",
-          "bower_components/backbone/backbone.js",
-          "backbone-model-file-upload.js"
-        ]
-      }
-    },
+      amd: {
+        src: 'backbone-model-file-upload.js',
+        host: 'http://localhost:8888/',
+        options: {
+          specs: ['test/*spec.js'],
+          helpers: 'bower_components/Blob/Blob.js',
+          //keepRunner: true,
+          template: require('grunt-template-jasmine-requirejs'),
+          templateOptions: {
+            requireConfig: {
+              paths: {
+                "jquery": "bower_components/jquery/dist/jquery.min",
+                "underscore": "bower_components/underscore/underscore-min",
+                "backbone": "bower_components/backbone/backbone"
+              }
+            }
+          },
 
-    parallel: {
-      runTest: {
-        tasks: [{
-          grunt: true,
-          args: ['run:mockServer']
-        }, {
-          grunt: true,
-          args: ['jasmine']
-        }, {
-          cmd: 'node:kill'
-        }]
+        }
+      },
+      browserGlobal: {
+        src: 'backbone-model-file-upload.js',
+        host: 'http://localhost:8888/',
+        options: {
+          specs: ['test/*spec.js'],
+          //keepRunner: true,
+          vendor: [
+            "bower_components/Blob/Blob.js",
+            "bower_components/jquery/dist/jquery.min.js",
+            "bower_components/underscore/underscore-min.js",
+            "bower_components/backbone/backbone.js"
+          ]
+        }
       }
     }
+
   });
 
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-run');
-  grunt.loadNpmTasks('grunt-parallel');
   grunt.loadNpmTasks('grunt-run-node');
 
-  grunt.registerTask('test', ['run:installBower','run_node','jasmine','stop_node']);
+  grunt.registerTask('test', ['build','run_node','jasmine','stop_node']);
+  grunt.registerTask('build', ['run:installBower']);
   grunt.registerTask('resetNodeWin', ['run:killAllNodeWindows']);
   grunt.registerTask('resetNodeMac', ['run:killAllNodeMac']);
 
