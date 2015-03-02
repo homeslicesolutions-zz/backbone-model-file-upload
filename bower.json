@@ -1,5 +1,6 @@
 {
   "name": "backbone-model-file-upload tests",
+  "main": "backbone-model-file-upload.js",
   "dependencies": {
     "jquery": "~2.1.1",
     "backbone": "~1.1.2",
