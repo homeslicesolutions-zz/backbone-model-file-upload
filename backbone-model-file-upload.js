@@ -125,7 +125,7 @@
           var flatObject = this._flatten(obj[i]);
           for (var x in flatObject) {
             if (!flatObject.hasOwnProperty(x)) continue;
-            output[i + '.' + x] = flatObject[x];
+            output['[' + i + '].[' + x + ']'] = flatObject[x];
           }
         } else {
           output[i] = obj[i];
