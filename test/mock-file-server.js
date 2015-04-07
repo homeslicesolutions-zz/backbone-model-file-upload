@@ -34,58 +34,53 @@ var server = http.createServer(function(req,res) {
 
     _.extend(output, unflatten(fields));
 
-    if (_.isEmpty(files)) return res.end(JSON.stringify(output));
+    if (!_.isEmpty(files)) {
 
-    for (var i in files) {
-      if (files.hasOwnProperty(i)) {
+      for (var i in files) {
+        if (files.hasOwnProperty(i)) {
 
-        output[i] = {};
+          output[i] = {};
 
-        fs.readFile(files[i].path, function (err, data) {
+          fs.readFile(files[i].path, function (err, data) {
 
-          output[i].type = files[i].type;
-          output[i].size = files[i].size;
-          output[i].name = files[i].name;
-          output[i].lastModifiedDate = files[i].lastModifiedDate;
-          output[i].data = 'data:' + files[i].type + ';base64,' + data.toString('base64');
+            output[i].type = files[i].type;
+            output[i].size = files[i].size;
+            output[i].name = files[i].name;
+            output[i].lastModifiedDate = files[i].lastModifiedDate;
+            output[i].data = 'data:' + files[i].type + ';base64,' + data.toString('base64');
 
-          res.end(JSON.stringify(output));
+          });
 
-        });
-
+        }
       }
+
     }
+
+    console.info(output);
+
+    res.end(JSON.stringify(output));
 
   });
 
 });
 
-var unflatten = function(path, obj, value) {
-  var key, child, output;
-  if (Object.prototype.toString.call(path) == '[object Object]') {
-    output = {};
-    for (key in path) {
-      if (path.hasOwnProperty(key)) {
-        unflatten(key.split('.'), output, path[key]);
-      }
+function unflatten(obj, output) {
+  var re = /^([^\[\]]+)\[(.+)\]$/g;
+  output = output || {};
+  for (var key in obj) {
+    var value = obj[key];
+    if (!key.toString().match(re)) {
+      var tempOut = {};
+      tempOut[key] = value;
+      _.extend(output, tempOut);
+    } else {
+      var keys = _.compact(key.split(re)), tempOut = {};
+      tempOut[keys[1]] = value;
+      output[keys[0]] = unflatten( tempOut, output[keys[0]] )
     }
-    return output;
   }
-  key = path.shift();
-
-  if (!path.length) {
-    obj[key] = value;
-    return obj;
-  }
-
-  if ((child = obj[key]) == void 0) {
-    child = obj[key] = {};
-  }
-
-  unflatten(path, child, value);
-
-  return obj;
-};
+  return output;
+}
 
 server.listen(options.port, options.host);
 console.log("listening on " + options.host + ':' + options.port);

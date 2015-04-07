@@ -51,7 +51,7 @@ module.exports = function(grunt) {
                 "backbone": "bower_components/backbone/backbone"
               }
             }
-          },
+          }
 
         }
       },

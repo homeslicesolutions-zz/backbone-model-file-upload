@@ -1,4 +1,4 @@
-//     Backbone.Model File Upload v0.5.3
+//     Backbone.Model File Upload v1.0.0
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
 //     https://github.com/homeslicesolutions/backbone-model-file-upload
@@ -6,6 +6,8 @@
 //       lutherism - Alex Jansen - alex.openrobot.net
 //       bildja - Dima Bildin - github.com/bildja
 //       Minjung - Alejandro - github.com/Minjung
+//       XemsDoom - Luca Moser - https://github.com/XemsDoom
+//       DanilloCorvalan  - Danillo Corvalan - https://github.com/DanilloCorvalan
 
 (function(root, factory) {
 
@@ -117,15 +119,16 @@
 
     // _ FlattenObject gist by "penguinboy".  Thank You!
     // https://gist.github.com/penguinboy/762197
-    _flatten: function( obj ) {
+    // NOTE for those who use "<1.0.0".  The notation changed to nested brackets
+    _flatten: function flatten( obj ) {
       var output = {};
       for (var i in obj) {
         if (!obj.hasOwnProperty(i)) continue;
         if (typeof obj[i] == 'object') {
-          var flatObject = this._flatten(obj[i]);
+          var flatObject = flatten(obj[i]);
           for (var x in flatObject) {
             if (!flatObject.hasOwnProperty(x)) continue;
-            output['[' + i + '].[' + x + ']'] = flatObject[x];
+            output[i + '[' + x + ']'] = flatObject[x];
           }
         } else {
           output[i] = obj[i];
@@ -133,6 +136,26 @@
       }
       return output;
 
+    },
+
+    // An "Unflatten" tool which is something normally should be on the backend
+    // But this is a guide to how you would unflatten the object
+    _unflatten: function unflatten(obj, output) {
+      var re = /^([^\[\]]+)\[(.+)\]$/g;
+      output = output || {};
+      for (var key in obj) {
+        var value = obj[key];
+        if (!key.toString().match(re)) {
+          var tempOut = {};
+          tempOut[key] = value;
+          _.extend(output, tempOut);
+        } else {
+          var keys = _.compact(key.split(re)), tempOut = {};
+          tempOut[keys[1]] = value;
+          output[keys[0]] = unflatten( tempOut, output[keys[0]] )
+        }
+      }
+      return output;
     },
 
     // _ Get the Progress of the uploading file

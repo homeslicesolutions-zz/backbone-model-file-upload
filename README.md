@@ -1,6 +1,7 @@
 Backbone.Model File Upload
 ==========================
 ![alt tag](https://travis-ci.org/homeslicesolutions/backbone-model-file-upload.svg?branch=master)
+
 A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE >= 10, FF, Chrome.)
 
 
@@ -59,7 +60,7 @@ http://www.asp.net/web-api/overview/working-with-http/sending-html-form-data,-pa
 For java, there's a great example here using the Spring framework:
 http://viralpatel.net/blogs/spring-mvc-multiple-file-upload-example/
 
-In the "test" folder (not finished yet), I included a PHP uploader just for testing purposes, but feel free to extend that.  You have to figure out the file upload limitations, however.
+Included here is a "node" js mock file server so you can use to test.
 
 ## What happens to a model with nested objects/arrays?
 The model will be flattened and the nested value will be separated with it's own unique composite "breadcrumb" key.  The key parsing will reflect the array or object with the index or property respectively.
@@ -87,13 +88,15 @@ var obj = {
 ``` 
 Will parse into
 ```
-obj['family']                             => 'The Smiths';
-obj['grandpa.name']                       => 'Ole Joe Smith';
-obj['grandpa.children.0.name']            => 'Mary Lee'; 
-obj['grandpa.children.0.spouse']          => 'John Lee';
-obj['grandpa.children.0.children.0.name'] => 'Tiny Lee';
-obj['grandpa.children.1.name']            => 'Susan Smith'; 
+obj['family']                                  => 'The Smiths';
+obj['grandpa[name]']                           => 'Ole Joe Smith';
+obj['grandpa[children[0[name]]]']              => 'Mary Lee';
+obj['grandpa[children[0[spouse]]]']            => 'John Lee';
+obj['grandpa[children[0[children[0[name]]]]]'] => 'Tiny Lee';
+obj['grandpa[children[1[name]]]']              => 'Susan Smith';
 ```
+
+Remember, you would need to "unflatten" the model in the back-end.  If you are a "node" user, please see my "mock-file-server" to see what I did there to "unflatten" the model.  After the file has been Posted (or Put), send the "unflattened" version back to the client.  That way, the Backbone Model will be in sync.  Also remember, nested arrays are parsed as objects, so its advised that you don't have nested arrays.  The warnings can go on and on.  Basic rule, try to avoid nesting if you can.
 
 ## Non-destructive plugin
 The plugin is non-destructive to the existing behaviors.  When a file object is detected, then the method is tweaked and converted to a FormData object.
@@ -166,6 +169,12 @@ c Version v0.1
 
 #### Version 0.5.3
  - Added CommonJS support
+
+#### Version 1.0.0
+ - Sticking to a semantic versioning pattern
+ - Fixed CommonJS argument mess up
+ - Switching to "Bracket" notation for flattening nested objects
+ - Added an "unflatten" internal method to unflatten
  
 ### Dev/Installation
 If you want to work on this plugin, test it, etc., it just needs an install of `node` and `grunt`. 

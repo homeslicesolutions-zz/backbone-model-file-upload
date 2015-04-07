@@ -28,7 +28,14 @@
         subject: 'Hello, friend!',
         body: 'Dear friend, Just saying hello! Love, Yours truly.',
         nestedObject: {
-          nest: 'eggs'
+          nest: 'eggs',
+          nestier: {
+            nestiest: {
+              0: 'one',
+              1: 'two',
+              2: 'three'
+            }
+          }
         }
       });
 
@@ -233,6 +240,58 @@
 
     });
 
+    it('should flatten correctly using a bracket notation', function(){
+
+      // Arrange
+      var expected = {
+        "from": "sample@email.com",
+        "subject": "Hello, friend!",
+        "body": "Dear friend, Just saying hello! Love, Yours truly.",
+        "nestedObject[nest]": "eggs",
+        "nestedObject[nestier[nestiest[0]]]": "one",
+        "nestedObject[nestier[nestiest[1]]]": "two",
+        "nestedObject[nestier[nestiest[2]]]": "three"
+      };
+
+      var flattened = fileModel._flatten(fileModel.toJSON());
+
+      expect(flattened["nestedObject[nest]"]).toBe("eggs")
+      expect(flattened["nestedObject[nestier[nestiest[0]]]"]).toBe("one");
+      expect(flattened["nestedObject[nestier[nestiest[1]]]"]).toBe("two");
+      expect(flattened["nestedObject[nestier[nestiest[2]]]"]).toBe("three");
+    });
+
+    it('should unflatten correctly using internal "unflatten" function', function(){
+
+      var flattened = fileModel._flatten(fileModel.toJSON()),
+          unflattened = fileModel._unflatten(flattened);
+
+      expect(_.isEqual(unflattened, fileModel.toJSON())).toBeTruthy();
+
+      console.log(fileModel._flatten({
+        'family': 'The Smiths',
+        'grandpa': {
+          'name': 'Ole Joe Smith',
+          'children': [
+            {
+              'name': 'Mary Lee',
+              'spouse': 'John Lee',
+              'children': [
+                {
+                  'name': 'Tiny Lee'
+                }
+              ]
+            },
+            {
+              'name': 'Susan Smith'
+            }
+          ]
+        }
+      }));
+
+    });
+
   });
+
 
 }();
