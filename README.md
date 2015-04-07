@@ -1,6 +1,6 @@
 Backbone.Model File Upload
 ==========================
-![alt tag](https://travis-ci.org/homeslicesolutions/backbone-model-file-upload.svg?branch=master)
+[![Travis Build](https://travis-ci.org/homeslicesolutions/backbone-model-file-upload.svg?branch=master)](https://travis-ci.org/homeslicesolutions/backbone-model-file-upload)
 
 A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE >= 10, FF, Chrome.)
 
