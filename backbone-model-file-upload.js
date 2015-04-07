@@ -18,7 +18,7 @@
   // NodeJS/CommonJS
   } else if (typeof exports !== 'undefined') {
     var _ = require('underscore'), $ = require('jquery'), Backbone = require('backbone');
-    factory(root, _, $, Backbone);
+    factory(root, Backbone, _, $);
 
   // Browser global
   } else {
