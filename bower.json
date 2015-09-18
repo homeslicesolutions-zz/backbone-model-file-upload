@@ -1,9 +1,24 @@
 {
   "name": "backbone-model-file-upload",
+  "description": "A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE >= 10, FF, Chrome.)",
+  "version": "1.0.0",
   "main": "backbone-model-file-upload.js",
+  "keywords": [
+    "backbone",
+    "fileupload",
+    "file",
+    "model",
+    "multipart"
+  ],
+  "author": "Joe Vu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/homeslicesolutions/backbone-model-file-upload/issues"
+  },
+  "homepage": "https://github.com/homeslicesolutions/backbone-model-file-upload",
   "dependencies": {
-    "jquery": "~2.1.1",
+    "jquery":   "~2.1.1",
     "backbone": "~1.1.2",
-    "Blob": "*"
+    "Blob":     "*"
   }
 }
