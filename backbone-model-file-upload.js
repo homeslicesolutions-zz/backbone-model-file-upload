@@ -13,21 +13,21 @@
 
   // AMD
   if (typeof define === 'function' && define.amd) {
-    define(['underscore', 'jquery', 'backbone'], function(_, $, Backbone){
-      factory(root, Backbone, _, $);
+    define(['underscore', 'backbone'], function(_, Backbone){
+      factory(root, Backbone, _);
     });
 
   // NodeJS/CommonJS
   } else if (typeof exports !== 'undefined') {
-    var _ = require('underscore'), $ = require('jquery'), Backbone = require('backbone');
-    factory(root, Backbone, _, $);
+    var _ = require('underscore'), Backbone = require('backbone');
+    factory(root, Backbone, _);
 
   // Browser global
   } else {
-    factory(root, root.Backbone, root._, root.$);
+    factory(root, root.Backbone, root._);
   }
 
-}(this, function(root, Backbone, _, $) {
+}(this, function(root, Backbone, _) {
   'use strict';
 
   // Clone the original Backbone.Model.prototype as superClass
@@ -100,12 +100,14 @@
         options.processData = false;
         options.contentType = false;
 
-        // Apply custom XHR for processing status & listen to "progress"
+        // Handle "progress" events
         var that = this;
-        options.xhr = function() {
-          var xhr = $.ajaxSettings.xhr();
+        var beforeSend = options.beforeSend;
+        options.beforeSend = function(xhr){
           xhr.upload.addEventListener('progress', that._progressHandler.bind(that), false);
-          return xhr;
+          if(beforeSend) {
+            return beforeSend.apply(this, arguments);
+          }
         }
       }
 
