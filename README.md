@@ -44,7 +44,7 @@ email.set('attachment', fileObject);
 email.save();
 
 email.on('progress', console.log);
-// Will result: the status in percent i.e. 0.3233
+// Will result: with an event object you can use evt.loaded and evt.total to figure out the percent (i.e. 0.3233)
 
 ```
 ### fileAttribute
