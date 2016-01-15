@@ -90,9 +90,15 @@
             _.each(value, function(file) {
               formData.append( key, file );
             });
-            return;
           }
-          formData.append( key, value );
+          else if (value instanceof Array && value.length && value[0] instanceof File) {
+            _.each(value, function(file) {
+              formData.append( key, file );
+            });
+          }
+          else {
+            formData.append( key, value );
+          }
         });
 
         // Set options for AJAX call
@@ -102,11 +108,11 @@
 
         // Handle "progress" events
         var that = this;
-        var beforeSend = options.beforeSend;
-        options.beforeSend = function(xhr){
-          xhr.upload.addEventListener('progress', that._progressHandler.bind(that), false);
-          if(beforeSend) {
-            return beforeSend.apply(this, arguments);
+        if (!options.xhr) {
+          options.xhr = function(){
+            var xhr = Backbone.$.ajaxSettings.xhr();
+            xhr.upload.addEventListener('progress', that._progressHandler.bind(that), false);
+            return xhr
           }
         }
       }
