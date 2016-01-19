@@ -18,10 +18,12 @@
 
     var fileModel;
     var simulatedFileObj;
+    var simulatedFileObj2;
 
     beforeEach(function(){
 
       simulatedFileObj = new Blob(['<strong>Hello World</strong>'], {type : 'text/html'});
+      simulatedFileObj2 = new Blob(['<strong>Hello Again, World</strong>'], {type : 'text/html'});
 
       fileModel = new File({
         from: 'sample@email.com',
@@ -42,13 +44,13 @@
     });
 
     it('should detect the file(blob) save successfully', function(done){
-      
+
       // Arrange
       fileModel.set({fileAttachment: simulatedFileObj});
 
       // Listen
       fileModel.on('sync', function(model){
-        
+
         // Assert
         expect(model.get('from')).toBe('sample@email.com');
 
@@ -70,7 +72,7 @@
 
       // Listen
       fileModel.on('sync', function(model){
-        
+
         // Assert
         expect(model.get('from')).toBe('sample@email.com');
 
@@ -92,7 +94,6 @@
 
       // Listen
       fileModel.on('sync', function(model){
-        
         // Assert
         expect(model.get('from')).toBe('sample@email.com');
         // Assert Blob (phantomJS can't do Blobs so just test minimal attributes)
@@ -109,11 +110,33 @@
 
     });
 
+    it ('should be able to save an array of multiple file objects', function(done){
+    // Listen
+    fileModel.on('sync', function(model){
+        // Assert
+        expect(model.get('from')).toBe('sample@email.com');
+
+        // Assert Blob (phantomJS can't do Blobs so just test minimal attributes)
+        expect(model.get('fileAttachment')[0].size).toBe(28);
+        expect(model.get('fileAttachment')[0].type).toBe('text/html');
+        //expect(model.get('fileAttachment')[0].data).toBe('data:text/html;base64,PHN0cm9uZz5IZWxsbyBXb3JsZDwvc3Ryb25nPg==')
+        expect(model.get('fileAttachment')[1].size).toBe(35);
+        expect(model.get('fileAttachment')[1].type).toBe('text/html');
+        //expect(model.get('fileAttachment')[1].data).toBe('data:text/html;base64,PHN0cm9uZz5IZWxsbyBBZ2FpbiwgV29ybGQ8L3N0cm9uZz4K=')
+
+        done();
+
+      });
+
+      // Act
+      fileModel.save('fileAttachment', [simulatedFileObj, simulatedFileObj2], {formData: true});
+    });
+
     it ('should be able to have "wait" and "validate" option', function(done){
 
       // Listen
       fileModel.on('sync', function(model){
-        
+
         // Assert
         expect(model.get('from')).toBe('sample@email.com');
         // Assert Blob (phantomJS can't do Blobs so just test minimal attributes)
@@ -134,7 +157,7 @@
 
       // Listen
       fileModel.on('sync', function(model){
-        
+
         // Assert
         expect(model.get('from')).toBe('somethingelse@email.com');
         //expect(model.get('fileAttachment').data).toBe('data:text/html;base64,PHN0cm9uZz5IZWxsbyBXb3JsZDwvc3Ryb25nPg==');
@@ -153,7 +176,7 @@
 
       // Listen
       fileModel.on('sync', function(model){
-        
+
         // Assert
         expect(model.get('from')).toBe('yes');
         //expect(model.get('fileAttachment').data).toBe('data:text/html;base64,PHN0cm9uZz5IZWxsbyBXb3JsZDwvc3Ryb25nPg==');
@@ -171,7 +194,7 @@
 
       // Listen
       fileModel.on('sync', function(model){
-        
+
         // Assert
         expect(model.get('from')).toBe('yes');
         //expect(model.get('fileAttachment').data).toBe('data:text/html;base64,PHN0cm9uZz5IZWxsbyBXb3JsZDwvc3Ryb25nPg==');
@@ -191,7 +214,7 @@
 
       // Listen
       fileModel.on('sync', function(model){
-        
+
         // Assert
         // Assert Blob (phantomJS can't do Blobs so just test minimal attributes)
         expect(model.get('fileAttachment').size).toBe(28);
@@ -220,7 +243,7 @@
 
       // Listen
       fileModel.on('sync', function(model){
-        
+
         // Assert
         expect(model.get('from')).toBe('yes');
 
@@ -268,7 +291,7 @@
 
       expect(_.isEqual(unflattened, fileModel.toJSON())).toBeTruthy();
 
-      console.log(fileModel._flatten({
+      console.log(JSON.stringify(fileModel._flatten({
         'family': 'The Smiths',
         'grandpa': {
           'name': 'Ole Joe Smith',
@@ -287,7 +310,7 @@
             }
           ]
         }
-      }));
+      })));
 
     });
 
