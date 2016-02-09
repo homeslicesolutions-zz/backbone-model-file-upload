@@ -43,7 +43,8 @@
     save: function(key, val, options) {
 
       // Variables
-      var attrs, attributes = this.attributes;
+      var attrs, attributes = this.attributes,
+          that = this;
 
       // Signature parsing - taken directly from original Backbone.Model.save
       // and it states: 'Handle both "key", value and {key: value} -style arguments.'
@@ -86,13 +87,14 @@
         // Converting Attributes to Form Data
         var formData = new FormData();
         _.each( formAttrs, function( value, key ){
-          if (value instanceof FileList) {
+          if (value instanceof FileList || (key === that.fileAttribute && value instanceof Array)) {
             _.each(value, function(file) {
               formData.append( key, file );
             });
-            return;
           }
-          formData.append( key, value );
+          else {
+            formData.append( key, value );
+          }
         });
 
         // Set options for AJAX call
@@ -101,12 +103,11 @@
         options.contentType = false;
 
         // Handle "progress" events
-        var that = this;
-        var beforeSend = options.beforeSend;
-        options.beforeSend = function(xhr){
-          xhr.upload.addEventListener('progress', that._progressHandler.bind(that), false);
-          if(beforeSend) {
-            return beforeSend.apply(this, arguments);
+        if (!options.xhr) {
+          options.xhr = function(){
+            var xhr = Backbone.$.ajaxSettings.xhr();
+            xhr.upload.addEventListener('progress', _.bind(that._progressHandler, that), false);
+            return xhr
           }
         }
       }

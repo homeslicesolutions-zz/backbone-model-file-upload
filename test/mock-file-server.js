@@ -15,9 +15,17 @@ var server = http.createServer(function(req,res) {
 
   console.log('POST Detected with incoming Form-data...');
 
-  var form = new formidable.IncomingForm();
+  var form = new formidable.IncomingForm(),
+      files = {},
+      fields = {};
 
-  form.parse(req, function(err, fields, files) {
+  form.on('file', function(field, file) {
+    files[field] = (files[field] || []).concat([file]);
+  });
+  form.on('field', function(field, value) {
+    fields[field] = value;
+  });
+  form.on('end',  function(err) {
     console.log('POST Finished and publishing object back to browser...');
 
     var headers = {};
@@ -33,34 +41,31 @@ var server = http.createServer(function(req,res) {
     var output = {};
 
     _.extend(output, unflatten(fields));
-
-    if (!_.isEmpty(files)) {
-
-      for (var i in files) {
-        if (files.hasOwnProperty(i)) {
-
-          output[i] = {};
-
-          fs.readFile(files[i].path, function (err, data) {
-
-            output[i].type = files[i].type;
-            output[i].size = files[i].size;
-            output[i].name = files[i].name;
-            output[i].lastModifiedDate = files[i].lastModifiedDate;
-            output[i].data = 'data:' + files[i].type + ';base64,' + data.toString('base64');
-
-          });
-
-        }
-      }
-
-    }
+    var fileOutputs = {};
+    _.each(files, function(files, filename){
+      var loopOutputs = [];
+      _.each(files, function(file) {
+        var fileOutput = {},
+            data = fs.readFileSync(file.path);
+        fileOutput.type = file.type;
+        fileOutput.size = data.length;
+        fileOutput.name = file.name;
+        fileOutput.lastModifiedDate = file.lastModifiedDate;
+        fileOutput.data = 'data:' + file.type + ';base64,' + data.toString('base64');
+        loopOutputs.push(fileOutput);
+      });
+      loopOutputs = loopOutputs.length > 1 ? loopOutputs : loopOutputs[0];
+      fileOutputs[filename] = loopOutputs;
+    });
+    output = _.merge(output, fileOutputs);
 
     console.info(output);
 
     res.end(JSON.stringify(output));
 
   });
+
+  form.parse(req)
 
 });
 
