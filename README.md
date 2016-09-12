@@ -174,6 +174,9 @@ c Version v0.1
  - Switching to "Bracket" notation for flattening nested objects
  - Added an "unflatten" internal method to unflatten
  
+#### Version 1.0.2
+ - Cutting a tag and fixing NPM issues 
+ 
 ### Dev/Installation
 If you want to work on this plugin, test it, etc., it just needs an install of `node` and `grunt`. 
 ```

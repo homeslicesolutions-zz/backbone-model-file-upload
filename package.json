@@ -1,6 +1,6 @@
 {
   "name": "backbone-model-file-upload",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A concise, non-iframe, & pure XHR2/AJAX Backbone.model file upload. (Good for IE >= 10, FF, Chrome.)",
   "main": "backbone-model-file-upload.js",
   "directories": {
