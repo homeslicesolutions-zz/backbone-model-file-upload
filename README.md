@@ -27,6 +27,9 @@ As the file is being uploaded, a trigger `progress` fires as the browser sends c
 
 If you want to force not using FormData, add the option `{ formData: false }` and the whether or not you have a file object in the model, it'll try to send it as part of the JSON object.  Opposite is true (for whichever circumstance) is that if you set `{ formData: true }`, it will force the usage of FormData.  Not setting it will leave it automatic and it'll try to detect if there is the file in the model.
 
+### CAVEAT 
+As of this moment, saving a file can only be a POST and not a PUT because of restrictions of browser. It may be that "multipart/form-data" was not designed to be idempotent nor was that a concept of form data.  So, I know I'm mixing the two worlds into one simple world, but you would have to force a POST in order to send the file correctly.   To make sure you only send POST, make sure you call it like so: `model.save(null, {method: 'POST'})`
+
 ```js
 var fileObject = $(':input[type="file"]')[0].files[0];
 
